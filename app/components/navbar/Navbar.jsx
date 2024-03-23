@@ -12,7 +12,7 @@ import UserMenu from "@/app/components/navbar/UserMenu";
 const Navbar= ({ currentUser }) => {
 	return (
 		<div className={ "fixed w-full z-10 shadow-sm" }>
-			<div className={ "py-4 border-b-[1px] border-red-600" }>
+			<div className={ "flex items-center py-4 h-[80px] z-10 border-b-[1px] border-red-600" }>
 				<Container>
 					<div className={ "flex flex-row items-center justify-between gap-3 md:gap-0" }>
 						<Logo/>
