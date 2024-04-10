@@ -1,21 +1,30 @@
 'use client'
-import Editor from '@monaco-editor/react';
+import Editor, { useMonaco } from '@monaco-editor/react';
+import { useEffect, useRef, useState } from "react";
 
 const EditorComp = ({ selected }) => {
+	const [value, setValue] = useState("");
+
+	const handleEditorChange = (value) => {
+		setValue(value);
+		// onChange("code", value);
+		// console.log(value)
+	};
+
 	const options = {
 		autoIndent: 'full',
 		contextmenu: true,
 		fontFamily: 'monospace',
-		fontSize: 13,
-		lineHeight: 24,
+		// fontSize: 13,
+		// lineHeight: 24,
 		hideCursorInOverviewRuler: true,
 		matchBrackets: 'always',
 		minimap: {
-			enabled: true,
+			enabled: false,
 		},
 		scrollbar: {
 			horizontalSliderSize: 4,
-			verticalSliderSize: 18,
+			verticalSliderSize: 14,
 		},
 		selectOnLineNumbers: true,
 		roundedSelection: false,
@@ -24,17 +33,17 @@ const EditorComp = ({ selected }) => {
 		automaticLayout: true,
 	};
 
-	console.log(selected);
-
 	return (
 		<div>
 			<Editor
-				height="90vh"
+				height="60vh"
 				// width="100vh"
-				defaultLanguage="javascript"
+				// defaultLanguage="javascript"
 				language={ selected }
 				defaultValue="// Write your code here"
 				theme="vs-dark"
+				options={ options }
+				onChange={handleEditorChange}
 			/>
 		</div>
 	);
