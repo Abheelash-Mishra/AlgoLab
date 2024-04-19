@@ -1,10 +1,7 @@
 'use client'
-import Editor, { useMonaco } from '@monaco-editor/react';
-import { useEffect, useRef, useState } from "react";
+import Editor from '@monaco-editor/react';
 
-const EditorComp = ({ selected }) => {
-	const [value, setValue] = useState("");
-
+const EditorComp = ({ selected, value, setValue, starterTemplate }) => {
 	const handleEditorChange = (value) => {
 		setValue(value);
 		// onChange("code", value);
@@ -36,14 +33,14 @@ const EditorComp = ({ selected }) => {
 	return (
 		<div>
 			<Editor
-				height="60vh"
+				height="57vh"
 				// width="100vh"
 				// defaultLanguage="javascript"
 				language={ selected }
-				defaultValue="// Write your code here"
+				value={ starterTemplate }
 				theme="vs-dark"
 				options={ options }
-				onChange={handleEditorChange}
+				onChange={ handleEditorChange }
 			/>
 		</div>
 	);
