@@ -1,9 +1,8 @@
 'use client'
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 const Dropdown = ({ items, onSelect, selected }) => {
-	// const [selected, setSelected] = useState(localStorage.getItem("selectedItem") || items[0]);
 
 	useEffect(() => {
 		const lastSelected = localStorage.getItem("selectedItem");
@@ -16,7 +15,6 @@ const Dropdown = ({ items, onSelect, selected }) => {
 		const selectedItem = event.target.value;
 		localStorage.setItem("selectedItem", selectedItem);
 		onSelect(selectedItem);
-		// console.log(selectedItem)
 	};
 
 	return (
@@ -29,9 +27,9 @@ const Dropdown = ({ items, onSelect, selected }) => {
 			{ items.map((item, index) => (
 				<option
 					key={ index }
-					value={ item }
+					value={ item.codename }
 				>
-					{ item }
+					{ item.officialName }
 				</option>
 			)) }
 		</select>
