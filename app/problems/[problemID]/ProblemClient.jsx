@@ -124,18 +124,35 @@ const ProblemClient = ({ problem }) => {
 		let statusID = 0;
 		let res;
 
-		do {
-			res = await axios.get(process.env.JUDGE0 + "submissions/" + token + "?base64_encoded=false")
-				.then((response) => {
-					statusID = response.data.status.id;
-					console.log(statusID);
-					setResponse(response.data)
-				}).catch((error) => {
+		const fetchSubmissionStatus = () => {
+			axios.get(process.env.JUDGE0 + "submissions/" + token + "?base64_encoded=false")
+				.then((res) => {
+					statusID = res.data.status.id;
+					setResponse(res.data);
+					if (statusID !== 1 && statusID !== 2) {
+						clearInterval(intervalId);
+					}
+				})
+				.catch((error) => {
 					console.error(error);
 				});
-		} while (statusID === 1 || statusID === 2);
+		};
+
+		// Call every 1.5 seconds
+		const intervalId = setInterval(fetchSubmissionStatus, 1500);
 
 
+		// TO BE DELETED LATER
+
+		// do {
+		// 	res = await axios.get(process.env.JUDGE0 + "submissions/" + token + "?base64_encoded=false")
+		// 		.then((res) => {
+		// 			statusID = res.data.status.id;
+		// 			setResponse(res.data)
+		// 		}).catch((error) => {
+		// 			console.error(error);
+		// 		});
+		// } while (statusID === 1 || statusID === 2);
 	}
 
 	const handleSubmission = () => {
