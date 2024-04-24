@@ -49,16 +49,14 @@ const ProblemClient = ({ problem }) => {
 			"officialName": "Python",
 			"codename": "python",
 			"id": 71,
-			"starterTemplate": "def main():\n\t# Your code goes here\n\t\n\nif __name__ == '__main__':\n    main()"
+			"starterTemplate": "def main():\n    # Your code goes here\n    \n\nif __name__ == '__main__':\n    main()"
 		}
 	]
 
-	// const languages = ["c", "cpp", "csharp", "java", "python"]
-	// const ids = [1, 2, 22, 4, 10]
 	const [selected, setSelected] = useState(languageData[0].codename);
 
 	// Gets the source code from the editor
-	const [code, setCode] = useState("");
+	const [code, setCode] = useState(localStorage.getItem("codeValue"));
 
 	// Stores the user input
 	const [input, setInput] = useState("");
@@ -74,6 +72,9 @@ const ProblemClient = ({ problem }) => {
 		setSelected(localStorage.getItem("selectedItem"))
 	}, [])
 
+	useEffect(() => {
+		handleInput();
+	}, [isCustom, problem.input]);
 
 	const handleChange = (e) => {
 		const inputVal = e.target.value;
@@ -85,9 +86,12 @@ const ProblemClient = ({ problem }) => {
 	const handleCompilation = async () => {
 		let token;
 		const languageID = selectedLanguage.id;
+
 		console.log(code)
 		console.log(languageID)
 		console.log(input)
+
+		toast.success("Executing!")
 
 		await axios.post(process.env.JUDGE0 + "submissions/?base64_encoded=false&wait=false", {
 			source_code: code,
@@ -96,7 +100,7 @@ const ProblemClient = ({ problem }) => {
 		})
 			.then((response) => {
 				token = response.data.token
-				toast.success("Executing!")
+				// toast.success("Executing!")
 			}).catch((error) => {
 				console.error(error)
 			})
@@ -119,7 +123,6 @@ const ProblemClient = ({ problem }) => {
 				});
 		} while (statusID === 1 || statusID === 2);
 
-		console.log(response)
 
 	}
 
@@ -127,8 +130,7 @@ const ProblemClient = ({ problem }) => {
 		console.log("Running test cases!")
 	}
 
-	// console.log(selected)
-
+	// console.log(code)
 
 	return (
 		<div className={ "flex w-full h-full" }>
@@ -199,10 +201,10 @@ const ProblemClient = ({ problem }) => {
 							/>
 						</div>
 						<div className={ "w-full ml-2" }>
-							<label htmlFor="message" className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Output</label>
+							<h1 className="block mb-2 text-lg justify-end font-medium text-blue-900 dark:text-white">Output</h1>
 							<textarea id="message" rows="8" disabled readOnly
-									  value={ response.stdout }
-									  className="block resize-none p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+									  value={ response.stderr || response.stdout }
+									  className={`block ${response.stderr ? "text-red-600" : "text-gray-200"} font-semibold resize-none p-2.5 w-full text-sm bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
 							/>
 						</div>
 
