@@ -64,6 +64,7 @@ const ProblemClient = ({ problem }) => {
 	// Stores the response data
 	const [response, setResponse] = useState("");
 
+	const [isCustom, setIsCustom] = useState(false);
 
 	const selectedLanguage = languageData.find(language => language.codename === selected);
 	const starterTemplate = selectedLanguage ? selectedLanguage.starterTemplate : "";
@@ -80,8 +81,19 @@ const ProblemClient = ({ problem }) => {
 		const inputVal = e.target.value;
 
 		setInput(inputVal);
+		console.log(input);
 	}
 
+	const handleInput = (e) => {
+		if(isCustom) {
+			setInput("");
+		}
+		else{
+			setInput(problem.input);
+		}
+
+		return input;
+	}
 
 	const handleCompilation = async () => {
 		let token;
@@ -195,9 +207,28 @@ const ProblemClient = ({ problem }) => {
 					{/*</div>*/ }
 					<div className={ "flex flex-row justify-between w-full my-4" }>
 						<div className={ "w-full mr-2" }>
-							<label htmlFor="message" className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Custom Input</label>
-							<textarea id="message" rows="8" onChange={ handleChange }
-									  className="block resize-none p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+							<div className={ "flex justify-between items-center" }>
+								<h1 className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">
+									{ isCustom ? "Custom Input" : "Input" }
+								</h1>
+
+								<div className="flex items-center mb-2">
+									<input id="checked-checkbox" type="checkbox"
+										   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+										   onChange={ () => setIsCustom(!isCustom) }
+									/>
+									<label htmlFor="checked-checkbox" className="ms-2 text-md font-medium text-gray-900 dark:text-gray-300">
+										Custom Input
+									</label>
+								</div>
+
+							</div>
+
+							<textarea id="message" rows="8"
+									  value={ input }
+									  readOnly={ !isCustom }
+									  onChange={ handleChange }
+									  className="block text-gray-200 font-semibold resize-none p-2.5 w-full text-sm bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
 							/>
 						</div>
 						<div className={ "w-full ml-2" }>
