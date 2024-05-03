@@ -1,9 +1,15 @@
 'use client'
 import Editor from '@monaco-editor/react';
 
-const EditorComp = ({ selected, value, setValue, starterTemplate }) => {
+const EditorComp = ({ selected, setValue, starterTemplate }) => {
+
+	// if(!localStorage.getItem("codeValue")){
+	// 	localStorage.setItem("codeValue", starterTemplate);
+	// }
+
 	const handleEditorChange = (value) => {
 		setValue(value);
+		// localStorage.setItem("codeValue", value);
 		// onChange("code", value);
 		// console.log(value)
 	};

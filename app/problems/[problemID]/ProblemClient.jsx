@@ -2,18 +2,21 @@
 
 import "@/app/resizable.css";
 
+import axios from "axios";
+import { EventEmitter } from "events";
 import React, { useEffect, useState } from "react";
 import { ResizableBox } from "react-resizable";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProblemDescription from "@/app/components/problems/ProblemDescription";
 import EditorComp from "@/app/components/EditorComp";
 import Dropdown from "@/app/components/Dropdown";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import { toast } from "react-hot-toast";
 
 const ProblemClient = ({ problem }) => {
+	const eventEmitter = new EventEmitter();
+
 	const languageData = [
 		{
 			"officialName": "C",
@@ -73,6 +76,7 @@ const ProblemClient = ({ problem }) => {
 		setSelected(localStorage.getItem("selectedItem"))
 	}, [])
 
+	// TODO - Turn off custom input when submitting
 	useEffect(() => {
 		handleInput();
 	}, [isCustom, problem.input]);
@@ -84,26 +88,68 @@ const ProblemClient = ({ problem }) => {
 		console.log(input);
 	}
 
-	const handleInput = (e) => {
-		if(isCustom) {
+	const handleInput = () => {
+		if (isCustom) {
 			setInput("");
-		}
-		else{
+		} else {
 			setInput(problem.input);
 		}
 
 		return input;
 	}
 
-	const handleCompilation = async () => {
+	// const handleCompilation = async (isFromSubmission = false) => {
+	// 	let token;
+	// 	const languageID = selectedLanguage.id;
+	//
+	// 	// console.log(code)
+	// 	// console.log(languageID)
+	// 	// console.log(input)
+	//
+	// 	if (!isFromSubmission) {
+	// 		toast.success("Executing!");
+	// 	}
+	//
+	// 	await axios.post(process.env.JUDGE0 + "submissions/?base64_encoded=false&wait=false", {
+	// 		source_code: code,
+	// 		language_id: languageID,
+	// 		stdin: input
+	// 	})
+	// 		.then((response) => {
+	// 			token = response.data.token
+	// 		}).catch((error) => {
+	// 			console.error(error)
+	// 		})
+	//
+	//
+	// 	console.log(token)
+	// 	let statusID = 0;
+	//
+	// 	const fetchSubmissionStatus = () => {
+	// 		axios.get(process.env.JUDGE0 + "submissions/" + token + "?base64_encoded=false")
+	// 			.then((res) => {
+	// 				statusID = res.data.status.id;
+	// 				setResponse(res.data);
+	// 				if (statusID !== 1 && statusID !== 2) {
+	// 					clearInterval(intervalId);
+	// 				}
+	// 			})
+	// 			.catch((error) => {
+	// 				console.error(error);
+	// 			});
+	// 	};
+	//
+	// 	// Call every 1 second
+	// 	const intervalId = setInterval(fetchSubmissionStatus, 1000);
+	// }
+
+	const handleCompilation = async (isFromSubmission = false) => {
 		let token;
 		const languageID = selectedLanguage.id;
 
-		console.log(code)
-		console.log(languageID)
-		console.log(input)
-
-		toast.success("Executing!")
+		if (!isFromSubmission) {
+			toast.success("Executing!");
+		}
 
 		await axios.post(process.env.JUDGE0 + "submissions/?base64_encoded=false&wait=false", {
 			source_code: code,
@@ -112,17 +158,12 @@ const ProblemClient = ({ problem }) => {
 		})
 			.then((response) => {
 				token = response.data.token
-				// toast.success("Executing!")
 			}).catch((error) => {
 				console.error(error)
-			})
-			.finally(() => {
-				// toast.success("Submitted!")
 			})
 
 		console.log(token)
 		let statusID = 0;
-		let res;
 
 		const fetchSubmissionStatus = () => {
 			axios.get(process.env.JUDGE0 + "submissions/" + token + "?base64_encoded=false")
@@ -131,6 +172,7 @@ const ProblemClient = ({ problem }) => {
 					setResponse(res.data);
 					if (statusID !== 1 && statusID !== 2) {
 						clearInterval(intervalId);
+						eventEmitter.emit('compilationDone', res.data); // Emit event here
 					}
 				})
 				.catch((error) => {
@@ -139,24 +181,28 @@ const ProblemClient = ({ problem }) => {
 		};
 
 		// Call every 1.5 seconds
-		const intervalId = setInterval(fetchSubmissionStatus, 1500);
-
-
-		// TO BE DELETED LATER
-
-		// do {
-		// 	res = await axios.get(process.env.JUDGE0 + "submissions/" + token + "?base64_encoded=false")
-		// 		.then((res) => {
-		// 			statusID = res.data.status.id;
-		// 			setResponse(res.data)
-		// 		}).catch((error) => {
-		// 			console.error(error);
-		// 		});
-		// } while (statusID === 1 || statusID === 2);
+		const intervalId = setInterval(fetchSubmissionStatus, 1000);
 	}
 
-	const handleSubmission = () => {
-		console.log("Running test cases!")
+	// TODO - Test that the submission works smoothly with different types of problem outputs
+	const handleSubmission = async () => {
+		await handleCompilation(true);
+
+		eventEmitter.on('compilationDone', (data) => { // Listen for event here
+			if (!data.stderr) {
+				const stdout = data.stdout.trim().replace(/\r?\n|\r/g, '');
+				const output = problem.output.trim().replace(/\r?\n|\r/g, '');
+
+				if (stdout === output) {
+					toast.success("Submitted!")
+
+				} else {
+					toast.error("Incorrect Submission!")
+				}
+			} else {
+				toast.error("Incorrect Submission!")
+			}
+		});
 	}
 
 	// console.log(code)
@@ -212,7 +258,7 @@ const ProblemClient = ({ problem }) => {
 
 				<EditorComp
 					selected={ selected }
-					value={ code }
+					// value={ code }
 					setValue={ setCode }
 					starterTemplate={ starterTemplate }
 				/>
@@ -252,7 +298,7 @@ const ProblemClient = ({ problem }) => {
 							<h1 className="block mb-2 text-lg justify-end font-medium text-blue-900 dark:text-white">Output</h1>
 							<textarea id="message" rows="8" disabled readOnly
 									  value={ response.stderr || response.stdout }
-									  className={`block ${response.stderr ? "text-red-600" : "text-gray-200"} font-semibold resize-none p-2.5 w-full text-sm bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+									  className={ `block ${ response.stderr ? "text-red-600" : "text-gray-200" } font-semibold resize-none p-2.5 w-full text-sm bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500` }
 							/>
 						</div>
 
