@@ -76,7 +76,6 @@ const ProblemClient = ({ problem }) => {
 		setSelected(localStorage.getItem("selectedItem"))
 	}, [])
 
-	// TODO - Turn off custom input when submitting
 	useEffect(() => {
 		handleInput();
 	}, [isCustom, problem.input]);
@@ -98,63 +97,25 @@ const ProblemClient = ({ problem }) => {
 		return input;
 	}
 
-	// const handleCompilation = async (isFromSubmission = false) => {
-	// 	let token;
-	// 	const languageID = selectedLanguage.id;
-	//
-	// 	// console.log(code)
-	// 	// console.log(languageID)
-	// 	// console.log(input)
-	//
-	// 	if (!isFromSubmission) {
-	// 		toast.success("Executing!");
-	// 	}
-	//
-	// 	await axios.post(process.env.JUDGE0 + "submissions/?base64_encoded=false&wait=false", {
-	// 		source_code: code,
-	// 		language_id: languageID,
-	// 		stdin: input
-	// 	})
-	// 		.then((response) => {
-	// 			token = response.data.token
-	// 		}).catch((error) => {
-	// 			console.error(error)
-	// 		})
-	//
-	//
-	// 	console.log(token)
-	// 	let statusID = 0;
-	//
-	// 	const fetchSubmissionStatus = () => {
-	// 		axios.get(process.env.JUDGE0 + "submissions/" + token + "?base64_encoded=false")
-	// 			.then((res) => {
-	// 				statusID = res.data.status.id;
-	// 				setResponse(res.data);
-	// 				if (statusID !== 1 && statusID !== 2) {
-	// 					clearInterval(intervalId);
-	// 				}
-	// 			})
-	// 			.catch((error) => {
-	// 				console.error(error);
-	// 			});
-	// 	};
-	//
-	// 	// Call every 1 second
-	// 	const intervalId = setInterval(fetchSubmissionStatus, 1000);
-	// }
-
 	const handleCompilation = async (isFromSubmission = false) => {
 		let token;
+		let stdInput = input;
 		const languageID = selectedLanguage.id;
 
 		if (!isFromSubmission) {
 			toast.success("Executing!");
 		}
 
+		if(isFromSubmission){
+			setInput(problem.input);
+			console.log(input + ' here: ' + problem.input)
+			stdInput = problem.input
+		}
+
 		await axios.post(process.env.JUDGE0 + "submissions/?base64_encoded=false&wait=false", {
 			source_code: code,
 			language_id: languageID,
-			stdin: input
+			stdin: stdInput
 		})
 			.then((response) => {
 				token = response.data.token
@@ -165,6 +126,7 @@ const ProblemClient = ({ problem }) => {
 		console.log(token)
 		let statusID = 0;
 
+		// TODO: Break the function when Judge0 is offline (404 Status)
 		const fetchSubmissionStatus = () => {
 			axios.get(process.env.JUDGE0 + "submissions/" + token + "?base64_encoded=false")
 				.then((res) => {
@@ -180,7 +142,7 @@ const ProblemClient = ({ problem }) => {
 				});
 		};
 
-		// Call every 1.5 seconds
+		// Call every 1 seconds
 		const intervalId = setInterval(fetchSubmissionStatus, 1000);
 	}
 
@@ -189,15 +151,16 @@ const ProblemClient = ({ problem }) => {
 		await handleCompilation(true);
 
 		eventEmitter.on('compilationDone', (data) => { // Listen for event here
+			console.log(data.stdout)
 			if (!data.stderr) {
 				const stdout = data.stdout.trim().replace(/\r?\n|\r/g, '');
 				const output = problem.output.trim().replace(/\r?\n|\r/g, '');
 
 				if (stdout === output) {
-					toast.success("Submitted!")
+					toast.success("Accepted Solution!")
 
 				} else {
-					toast.error("Incorrect Submission!")
+					toast.error("Incorrect Solution!")
 				}
 			} else {
 				toast.error("Incorrect Submission!")
@@ -236,7 +199,7 @@ const ProblemClient = ({ problem }) => {
 					<div className={ "my-1.5" }>
 						<button
 							className={ "bg-red-500/90 text-md text-white font-bold px-4 py-0.5 mx-4 rounded-lg" }
-							onClick={ handleCompilation }
+							onClick={ () => handleCompilation(false) }
 						>
 							Run
 						</button>
