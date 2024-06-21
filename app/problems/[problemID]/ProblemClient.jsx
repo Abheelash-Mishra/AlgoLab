@@ -119,9 +119,16 @@ const ProblemClient = ({ problem }) => {
 		})
 			.then((response) => {
 				token = response.data.token
-			}).catch((error) => {
-				console.error(error)
 			})
+			.catch((error) => {
+				if (error.response && error.response.status === 404) {
+					toast.error('Server is Offline. Please try again later.');
+				} else if (error.message === 'Network Error' || error.message.includes('ERR_CONNECTION_REFUSED')) {
+					toast.error('Server is Offline. Please try again later.');
+				} else {
+					console.error(error);
+				}
+			});
 
 		console.log(token)
 		let statusID = 0;
@@ -139,11 +146,12 @@ const ProblemClient = ({ problem }) => {
 				})
 				.catch((error) => {
 					console.error(error);
+					clearInterval(intervalId);
 				});
 		};
 
-		// Call every 1 seconds
-		const intervalId = setInterval(fetchSubmissionStatus, 1000);
+		// Call every 2 seconds
+		const intervalId = setInterval(fetchSubmissionStatus, 2000);
 	}
 
 	// TODO - Test that the submission works smoothly with different types of problem outputs
