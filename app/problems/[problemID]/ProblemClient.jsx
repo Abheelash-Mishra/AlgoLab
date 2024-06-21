@@ -85,7 +85,7 @@ const ProblemClient = ({ problem }) => {
 		const inputVal = e.target.value;
 
 		setInput(inputVal);
-		console.log(input);
+		// console.log(input);
 	}
 
 	const handleInput = () => {
@@ -109,7 +109,7 @@ const ProblemClient = ({ problem }) => {
 		}
 
 		if (isFromSubmission) {
-			console.log(input + ' here: ' + problem.input)
+			// console.log(input + ' here: ' + problem.input)
 			stdInput = problem.input
 		}
 
@@ -158,14 +158,15 @@ const ProblemClient = ({ problem }) => {
 	}
 
 	// TODO - Test that the submission works smoothly with different types of problem outputs
+	// Seems done
 	const handleSubmission = async () => {
 		await handleCompilation(true);
 
 		eventEmitter.on('compilationDone', (data) => { // Listen for event here
-			console.log(data.stdout)
 			if (!data.stderr) {
 				const stdout = data.stdout.trim().replace(/\r?\n|\r/g, '');
 				const output = problem.output.trim().replace(/\r?\n|\r/g, '');
+				// console.log(stdout, output);
 
 				if (stdout === output) {
 					toast.success("Accepted Solution!")
