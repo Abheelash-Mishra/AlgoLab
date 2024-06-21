@@ -157,9 +157,8 @@ const ProblemClient = ({ problem }) => {
 		const intervalId = setInterval(fetchSubmissionStatus, 2000);
 	}
 
-	// TODO - Test that the submission works smoothly with different types of problem outputs
-	// Seems done
-	const handleSubmission = async () => {
+	const handleSubmission = async (event) => {
+		event.preventDefault();
 		await handleCompilation(true);
 
 		eventEmitter.on('compilationDone', (data) => { // Listen for event here
@@ -170,6 +169,17 @@ const ProblemClient = ({ problem }) => {
 
 				if (stdout === output) {
 					toast.success("Accepted Solution!")
+
+					axios.post('/api/user', {
+						problemID: problem.id
+					})
+						.then(function (response) {
+							console.log("Added to Completed Problems!" + problem.id);
+							console.log(response);
+						})
+						.catch(function (error) {
+							console.log(error);
+						});
 
 				} else {
 					toast.error("Incorrect Solution!")
