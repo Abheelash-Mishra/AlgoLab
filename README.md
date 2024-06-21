@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AlgoLab
 
-## Getting Started
+## Overview
+AlgoLab is a web application inspired by LeetCode, designed to provide users with a variety of coding problems to solve using an integrated code editor. This platform aims to enhance learning through practice, offering a range of challenges across different programming languages and difficulty levels.
 
-First, run the development server:
+## Features
+- **Problem Selection**: Users can choose from a diverse set of coding problems categorized by difficulty and type.
+- **Inbuilt Code Editor**: Integrated Monaco code editor allows users to write and test solutions directly within the platform.
+- **RESTful APIs**: APIs handle problem submissions, integrating with the Judge0 API for real-time code execution and evaluation.
+- **User Authentication**: Secure authentication and authorization implemented using NextAuth, ensuring user data privacy and session management.
+- **Responsive UI**: Designed with a responsive user interface for optimal user experience across devices.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Technologies Used
+- **Next.js**: React framework for building server-side rendered applications.
+- **NextAuth**: Authentication library for Next.js applications.
+- **Prisma**: Database toolkit for working with PostgreSQL databases.
+- **Monaco Editor**: Browser-based code editor used for syntax highlighting, code completion, and more.
+- **Judge0 API**: API for executing and evaluating code submissions in various programming languages.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup Instructions
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+- Docker
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Abheelash-Mishra/AlgoLab.git
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-## Learn More
+3. Set up environment variables:
+   - Create a `.env.local` file in the root directory.
+   - Define environment variables like `NEXT_PUBLIC_GOOGLE_CLIENT_ID`, `NEXT_PUBLIC_GOOGLE_CLIENT_SECRET`, and others required by NextAuth.
 
-To learn more about Next.js, take a look at the following resources:
+4. Initialize the database:
+   ```bash
+   npx prisma migrate dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Inside the judge0 folder, locate the configurations file and enter the values as needed. Ensure you have Docker installed and have the Docker Engine running. Using `docker-compose up` while inside the judge0 folder, start the container responsible for  code executions.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+6. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-## Deploy on Vercel
+7. Access the application in your browser at `http://localhost:3000`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
+Contributions to AlgoLab are welcome! Please fork the repository and submit pull requests to contribute new features, improvements, or bug fixes.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+- Mention any individuals or organizations that you would like to acknowledge for their contributions or support.
