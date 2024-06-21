@@ -57,6 +57,7 @@ const ProblemClient = ({ problem }) => {
 	]
 
 	const [selected, setSelected] = useState(languageData[0].codename);
+	const [isLoading, setIsLoading] = useState(false);
 
 	// Gets the source code from the editor
 	const [code, setCode] = useState(localStorage.getItem("codeValue"));
@@ -100,14 +101,14 @@ const ProblemClient = ({ problem }) => {
 	const handleCompilation = async (isFromSubmission = false) => {
 		let token;
 		let stdInput = input;
+		setIsLoading(true);
 		const languageID = selectedLanguage.id;
 
 		if (!isFromSubmission) {
 			toast.success("Executing!");
 		}
 
-		if(isFromSubmission){
-			setInput(problem.input);
+		if (isFromSubmission) {
 			console.log(input + ' here: ' + problem.input)
 			stdInput = problem.input
 		}
@@ -128,12 +129,12 @@ const ProblemClient = ({ problem }) => {
 				} else {
 					console.error(error);
 				}
+				setIsLoading(false);
 			});
 
 		console.log(token)
 		let statusID = 0;
 
-		// TODO: Break the function when Judge0 is offline (404 Status)
 		const fetchSubmissionStatus = () => {
 			axios.get(process.env.JUDGE0 + "submissions/" + token + "?base64_encoded=false")
 				.then((res) => {
@@ -142,10 +143,12 @@ const ProblemClient = ({ problem }) => {
 					if (statusID !== 1 && statusID !== 2) {
 						clearInterval(intervalId);
 						eventEmitter.emit('compilationDone', res.data); // Emit event here
+						setIsLoading(false);
 					}
 				})
 				.catch((error) => {
 					console.error(error);
+					setIsLoading(false);
 					clearInterval(intervalId);
 				});
 		};
@@ -233,12 +236,8 @@ const ProblemClient = ({ problem }) => {
 					setValue={ setCode }
 					starterTemplate={ starterTemplate }
 				/>
-				{/*<OutputAccordion />*/ }
 
 				<div className={ "flex flex-col justify-between items-center px-4 py-1 bg-neutral-700/50 rounded-b-xl" }>
-					{/*<div className={ "text-white text-xl font-medium flex items-center border-b-[1px] w-full border-gray-500" }>*/ }
-					{/*	Output*/ }
-					{/*</div>*/ }
 					<div className={ "flex flex-row justify-between w-full my-4" }>
 						<div className={ "w-full mr-2" }>
 							<div className={ "flex justify-between items-center" }>
@@ -250,6 +249,7 @@ const ProblemClient = ({ problem }) => {
 									<input id="checked-checkbox" type="checkbox"
 										   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 										   onChange={ () => setIsCustom(!isCustom) }
+										   checked={ isCustom }
 									/>
 									<label htmlFor="checked-checkbox" className="ms-2 text-md font-medium text-gray-900 dark:text-gray-300">
 										Custom Input
@@ -268,13 +268,13 @@ const ProblemClient = ({ problem }) => {
 						<div className={ "w-full ml-2" }>
 							<h1 className="block mb-2 text-lg justify-end font-medium text-blue-900 dark:text-white">Output</h1>
 							<textarea id="message" rows="8" disabled readOnly
-									  value={ response.stderr || response.stdout }
+									  value={ isLoading ? 'Loading...' : (response.stderr || response.stdout) }
 									  className={ `block ${ response.stderr ? "text-red-600" : "text-gray-200" } font-semibold resize-none p-2.5 w-full text-sm bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500` }
 							/>
 						</div>
-
 					</div>
 				</div>
+
 			</div>
 		</div>
 
