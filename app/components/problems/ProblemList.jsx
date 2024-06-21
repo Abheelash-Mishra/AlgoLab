@@ -3,8 +3,9 @@
 import { FaRegCheckCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
-const ProblemList = ({ id, sno=1, title, difficulty, type }) => {
+const ProblemList = ({ user, id, sno, title, difficulty, type }) => {
 	const router = useRouter();
+	// console.log(user)
 	const handleClick = () => {
 		console.log("Problem clicked", id);
 		router.push(`/problems/${id}`);
@@ -16,7 +17,7 @@ const ProblemList = ({ id, sno=1, title, difficulty, type }) => {
 		>
 			<div className={ "w-1/6 mx-2 flex" }>
 				<div className={ "px-1 flex items-center text-green-700" }>
-					<FaRegCheckCircle/>
+					{ user.completedIDs.includes(id) ? <FaRegCheckCircle /> : null }
 				</div>
 				<div className={ "px-2" }>
 					{ sno }
