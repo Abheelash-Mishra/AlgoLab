@@ -17,7 +17,7 @@ const ProblemList = ({ user, id, sno, title, difficulty, type }) => {
 		>
 			<div className={ "w-1/6 mx-2 flex" }>
 				<div className={ "px-1 flex items-center text-green-700" }>
-					{ user.completedIDs.includes(id) ? <FaRegCheckCircle /> : null }
+					{ user?.completedIDs.includes(id) ? <FaRegCheckCircle /> : <div className={"w-[15px]"}></div> }
 				</div>
 				<div className={ "px-2" }>
 					{ sno }

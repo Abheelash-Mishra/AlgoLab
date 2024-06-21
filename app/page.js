@@ -7,7 +7,7 @@ export default async function Home() {
 	const currentUser = await getCurrentUser();
 
 	return (
-		<main className="">
+		<main className="mt-24">
 			<div className={ "w-full flex flex-col items-center" }>
 				<div className={ "w-1/2 p-2 flex flex-row text-lg text-white font-semibold bg-gray-800 border-gray-500 border-y-[1px]" }>
 					<div className={ "w-1/6 mx-2 flex" }>
