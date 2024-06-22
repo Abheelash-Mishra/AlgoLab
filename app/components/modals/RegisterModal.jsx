@@ -10,7 +10,7 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useLoginModal from "@/app/hooks/useLoginModal";
 
-import Modal from "@/app/components/modals/modal";
+import Modal from "@/app/components/modals/Modal";
 import Heading from "@/app/components/Heading";
 import Input from "@/app/components/inputs/Input";
 import toast from "react-hot-toast";
