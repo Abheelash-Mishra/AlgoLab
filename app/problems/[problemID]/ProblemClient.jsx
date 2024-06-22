@@ -154,7 +154,7 @@ const ProblemClient = ({ problem }) => {
 		};
 
 		// Call every 2 seconds
-		const intervalId = setInterval(fetchSubmissionStatus, 2000);
+		const intervalId = setInterval(fetchSubmissionStatus, 1000);
 	}
 
 	const handleSubmission = async (event) => {
