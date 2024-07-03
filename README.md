@@ -67,6 +67,3 @@ Contributions to AlgoLab are welcome! Please fork the repository and submit pull
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-- Mention any individuals or organizations that you would like to acknowledge for their contributions or support.
