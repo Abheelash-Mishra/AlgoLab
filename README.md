@@ -5,6 +5,10 @@ AlgoLab is a web application inspired by LeetCode, designed to provide users wit
 
 **DISCLAIMER: The API works, but it is hosted on HTTP. The application is hosted on vercel under HTTPS. As such, your browser will not allow communication between the two unless you disable it for this specific website. Currently working on hosting the API on HTTPS.**
 
+## Demo Video
+
+https://github.com/Abheelash-Mishra/AlgoLab/assets/108271085/8b3ab43b-c2f2-490d-bc1f-31ec1891c28a
+
 ## Features
 - **Problem Selection**: Users can choose from a diverse set of coding problems categorized by difficulty and type.
 - **Inbuilt Code Editor**: Integrated Monaco code editor allows users to write and test solutions directly within the platform.
