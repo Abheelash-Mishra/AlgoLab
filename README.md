@@ -51,7 +51,7 @@ https://github.com/Abheelash-Mishra/AlgoLab/assets/108271085/8b3ab43b-c2f2-490d-
    npx prisma migrate dev
    ```
 
-5. Inside the judge0 folder, locate the configurations file and enter the values as needed. Ensure you have Docker installed and have the Docker Engine running. Using `docker-compose up` while inside the judge0 folder, start the container responsible for  code executions.
+5. Head to the Judge0 github and download their latest release. Locate the configurations file and enter the values as needed. Ensure you have Docker installed and have the Docker Engine running. Using `docker-compose up` while inside the judge0 folder, start the container responsible for code executions.
 
 6. Start the development server:
    ```bash
