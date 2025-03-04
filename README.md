@@ -3,7 +3,7 @@
 ## Overview
 AlgoLab is a web application inspired by LeetCode, designed to provide users with a variety of coding problems to solve using an integrated code editor. This platform aims to enhance learning through practice, offering a range of challenges across different programming languages and difficulty levels.
 
-**DISCLAIMER: The code execution API works, but it is hosted on HTTP. The application is hosted on vercel under HTTPS. As such, your browser will not allow communication between the two unless you disable it for this specific website. Currently working on hosting the code execution API on HTTPS.**
+**DISCLAIMER: The AWS EC2 instance hosting the Judge0 API for this project is now offline. To run this app, please set it up locally and either use already hosted Judge0 APIs, or self host it.**
 
 ## Demo Video
 
